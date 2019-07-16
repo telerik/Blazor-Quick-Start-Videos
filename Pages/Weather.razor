@@ -1,0 +1,53 @@
+@page "/weather"
+<!-- 
+    The Forecast component comes from /Shared/Forecast.razor
+
+    In a larger application, components can come from other folders or even libraries .dll
+-->
+
+<div class="d-flex">
+    @foreach (var f in forecasts)
+    {
+        <Forecast Outlook="@f.Summary" IsSelected="@f.Selected" DayOfWeek="@f.Date.DayOfWeek" Temperature="@f.TemperatureC" OnDetailsSelected="@HandleDetailsSelected">
+            <CustomMessage>
+                @if (f.Summary == "Rainy")
+                {
+                    <div class="alert alert-danger">
+                        Tornado Warning!
+                    </div>
+                }
+            </CustomMessage>
+        </Forecast>
+    }
+</div>
+
+@code {
+
+    WeatherForecast[] forecasts;
+
+    void HandleDetailsSelected(DayOfWeek selectedValue)
+    {
+        foreach (var item in forecasts)
+        {
+            item.Selected = false;
+        }
+        forecasts.First(f => f.Date.DayOfWeek == selectedValue).Selected = true;
+    }
+
+    protected override void OnInit()
+    {
+        forecasts = GenerateDemoData();
+    }
+
+    private WeatherForecast[] GenerateDemoData()
+    {
+        var rng = new Random();
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = rng.Next(10, 25),
+            Summary = Summaries[rng.Next(Summaries.Length)]
+        }).ToArray();
+    }
+    private static string[] Summaries => new[] { "Sunny", "Cloudy", "Rainy" };
+}
