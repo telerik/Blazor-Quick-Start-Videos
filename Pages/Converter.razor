@@ -1,0 +1,38 @@
+@page "/converter"
+
+<h1>Convert Inch to/from Centimeter</h1>
+
+<label>Inches</label>
+
+<input type="number" value="@inches" />
+
+<span> = </span>
+
+<input type="number" value="@centimeters" />
+
+<label>Centimeters</label>
+
+@code {
+
+    double inches = 1; // default value
+    double centimeters = 2.54; // default value
+
+    public double Inches
+    {
+        get => inches;
+        set
+        {
+            centimeters = value * 2.54;
+            inches = value;
+        }
+    }
+    public double Centimeters
+    {
+        get => centimeters;
+        set
+        {
+            inches = value / 2.54;
+            centimeters = value;
+        }
+    }
+}
